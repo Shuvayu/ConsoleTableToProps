@@ -50,6 +50,8 @@ namespace ConsoleTableToProps.Services
                     return "Guid";
                 case "real":
                     return "double";
+                case "float":
+                    return "double";
                 case "int":
                     return "int";
                 case "bit":
