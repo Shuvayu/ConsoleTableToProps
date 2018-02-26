@@ -6,10 +6,11 @@ using System.IO;
 
 namespace ConsoleTableToProps
 {
-    class Program
+    internal class Program
     {
         public static IConfigurationRoot Configuration { get; set; }
-        static void Main(string[] args)
+
+        private static void Main()
         {
             var builder = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
@@ -17,10 +18,10 @@ namespace ConsoleTableToProps
 
             Configuration = builder.Build();
 
-            AppSettings appSettings = new AppSettings();
+            var appSettings = new AppSettings();
             Configuration.GetSection("Settings").Bind(appSettings);
 
-            DataTypeMappingService dataTypeMappingService = new DataTypeMappingService();
+            var dataTypeMappingService = new DataTypeMappingService();
 
             dataTypeMappingService.GenerateTxtPocoOutput(appSettings);
 

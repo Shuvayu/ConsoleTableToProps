@@ -8,20 +8,18 @@ namespace ConsoleTableToProps.Services
 {
     public class DataTypeMappingService
     {
-
         public void GenerateTxtPocoOutput(AppSettings settings)
         {
             try
             {
-
                 if (string.IsNullOrEmpty(settings.ConnectionString) || string.IsNullOrEmpty(settings.DatabaseName) || string.IsNullOrEmpty(settings.TableName))
                 {
-                    System.Console.WriteLine("Parameters are empty !!!");
+                    Console.WriteLine("Parameters are empty !!!");
                 }
 
-                DataRepository dataRepository = new DataRepository(settings.ConnectionString);
+                var dataRepository = new DataRepository(settings.ConnectionString);
                 var columns = dataRepository.DbCallForSchema(settings.DatabaseName, settings.TableName).ToList();
-                StringBuilder resultString = new StringBuilder();
+                var resultString = new StringBuilder();
                 foreach (var column in columns)
                 {
                     resultString.Append(POCOLine(column.DATA_TYPE, column.COLUMN_NAME));
@@ -33,44 +31,60 @@ namespace ConsoleTableToProps.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}", ex);
+                Console.WriteLine($"Error: {ex}");
                 throw;
             }
         }
 
-        private string DBDataTypeMapping(string dBDataType)
+        private static string DBDataTypeMapping(string dBDataType)
         {
             switch (dBDataType)
             {
                 case "varchar":
                     return "string";
+
                 case "nvarchar":
                     return "string";
+
                 case "uniqueidentifier":
                     return "Guid";
+
                 case "real":
                     return "double";
+
                 case "float":
                     return "double";
+
                 case "int":
                     return "int";
+
                 case "bit":
                     return "bool";
+
                 case "date":
                     return "DateTime";
+
                 case "time":
                     return "DateTime";
+
                 case "datetime":
                     return "DateTime";
+
+                case "money":
+                    return "decimal";
+
+                case "decimal":
+                    return "decimal";
+
                 default:
                     return "Check Data Type Mapping";
             }
         }
 
-        private string POCOLine(string dBDataType, string dBColumnType)
+        private static string POCOLine(string dBDataType, string dBColumnType)
         {
             var relaventDataType = DBDataTypeMapping(dBDataType);
-            return string.Format("public {0} {1} {{ get; set; }}", relaventDataType, dBColumnType);
+            return $"public {relaventDataType} {dBColumnType} {{ get; set; }}";
         }
     }
 }
